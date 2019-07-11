@@ -18,50 +18,50 @@ declare namespace _ReactPixi {
 
   type Container<T> = Partial<
     Omit<T, "children" | "position" | "scale" | "pivot">
-  > &
+    > &
     InteractionEvents & {
-      /**
-       * The coordinate of the object relative to the local coordinates of the parent.
-       * Assignment by value since pixi-v4.
-       *
-       * @example
-       *
-       * position={100}
-       * position={[100, 100]}
-       * position={{x: 100, y: 100}}
-       * position={new PIXI.Point(100, 100)}
-       * position={new PIXI.ObservablePoint(100, 100)}
-       */
-      position?: PointLike;
+    /**
+     * The coordinate of the object relative to the local coordinates of the parent.
+     * Assignment by value since pixi-v4.
+     *
+     * @example
+     *
+     * position={100}
+     * position={[100, 100]}
+     * position={{x: 100, y: 100}}
+     * position={new PIXI.Point(100, 100)}
+     * position={new PIXI.ObservablePoint(100, 100)}
+     */
+    position?: PointLike;
 
-      /**
-       * The scale factor of the object.
-       * Assignment by value since pixi-v4.
-       *
-       * @example
-       *
-       * scale={0.5}
-       * scale={[0.5, 0.5]}
-       * scale={{x: 0.5, y: 0.5}}
-       * scale={new PIXI.Point(0.5, 0.5)}
-       * scale={new PIXI.ObservablePoint(0.5, 0.5)}
-       */
-      scale?: PointLike;
+    /**
+     * The scale factor of the object.
+     * Assignment by value since pixi-v4.
+     *
+     * @example
+     *
+     * scale={0.5}
+     * scale={[0.5, 0.5]}
+     * scale={{x: 0.5, y: 0.5}}
+     * scale={new PIXI.Point(0.5, 0.5)}
+     * scale={new PIXI.ObservablePoint(0.5, 0.5)}
+     */
+    scale?: PointLike;
 
-      /**
-       * The pivot point of the displayObject that it rotates around.
-       * Assignment by value since pixi-v4.
-       *
-       * @example
-       *
-       * pivot={100}
-       * pivot={[100, 100]}
-       * pivot={{x: 100, y: 100}}
-       * pivot={new PIXI.Point(100, 100)}
-       * pivot={new PIXI.ObservablePoint(100, 100)}
-       */
-      pivot?: PointLike;
-    };
+    /**
+     * The pivot point of the displayObject that it rotates around.
+     * Assignment by value since pixi-v4.
+     *
+     * @example
+     *
+     * pivot={100}
+     * pivot={[100, 100]}
+     * pivot={{x: 100, y: 100}}
+     * pivot={new PIXI.Point(100, 100)}
+     * pivot={new PIXI.ObservablePoint(100, 100)}
+     */
+    pivot?: PointLike;
+  };
 
   interface ISprite
     extends Container<Omit<PIXI.Sprite, "anchor" | "roundPixels">> {
@@ -149,7 +149,13 @@ declare namespace _ReactPixi {
      *
      * style={{ font: '50px Desyrel' }}
      */
-    style?: PIXI.extras.BitmapTextStyle;
+    style?: BitmapTextStyle;
+  }
+
+  interface BitmapTextStyle {
+    font: string | { name: string, size: number };
+    align: string;
+    tint: number;
   }
 
   interface INineSlicePlane extends Container<PIXI.mesh.NineSlicePlane> {
@@ -188,13 +194,21 @@ declare namespace _ReactPixi {
      *
      * properties={{ vertices: true, position: true, rotation: false }}
      */
-    properties?: PIXI.particles.ParticleContainerProperties;
+    properties?: ParticleContainerProperties;
+  }
+
+  interface ParticleContainerProperties {
+    vertices?: boolean;
+    position?: boolean;
+    rotation?: boolean;
+    uvs?: boolean;
+    tint?: boolean;
   }
 
   interface ITilingSprite
     extends Container<
       Omit<PIXI.extras.TilingSprite, "tileScale" | "tilePosition">
-    > {
+      > {
     /**
      * The scale factor of the tile.
      * Assignment by value since pixi-v4.
@@ -317,7 +331,7 @@ declare namespace _ReactPixi {
      *
      * options={{ antialias: true, roundPixels: true }}
      */
-    options?: PIXI.ApplicationOptions;
+    options?: ApplicationOptions;
 
     /**
      * Callback when the component is successfully mounted
@@ -334,10 +348,30 @@ declare namespace _ReactPixi {
     onUnmount?(app: PIXI.Application): void;
   }
 
+  interface ApplicationOptions {
+    autoStart?: boolean;
+    width?: number;
+    height?: number;
+    view?: HTMLCanvasElement;
+    transparent?: boolean;
+    autoDensity?: boolean;
+    antialias?: boolean;
+    preserveDrawingBuffer?: boolean;
+    resolution?: number;
+    forceCanvas?: boolean;
+    backgroundColor?: number;
+    clearBeforeRender?: boolean;
+    forceFXAA?: boolean;
+    powerPreference?: string;
+    sharedTicker?: boolean;
+    sharedLoader?: boolean;
+    resizeTo?: Window | HTMLElement;
+  }
+
   interface ICustomComponent<
     P extends { [key: string]: any },
     PixiInstance extends PIXI.DisplayObject
-  > {
+    > {
     /**
      * Create the PIXI instance
      * The component is created during React reconciliation.
@@ -388,13 +422,13 @@ declare namespace ReactPixi {
   class Text extends React.Component<_ReactPixi.IText> {}
   class Container extends React.Component<
     _ReactPixi.Container<PIXI.Container>
-  > {}
+    > {}
   class Graphics extends React.Component<_ReactPixi.IGraphics> {}
   class BitmapText extends React.Component<_ReactPixi.IBitmapText> {}
   class NineSlicePlane extends React.Component<_ReactPixi.INineSlicePlane> {}
   class ParticleContainer extends React.Component<
     _ReactPixi.IParticleContainer
-  > {}
+    > {}
   class TilingSprite extends React.Component<_ReactPixi.ITilingSprite> {}
   class Rope extends React.Component<_ReactPixi.IRope> {}
   class Mesh extends React.Component<_ReactPixi.IMesh> {}
