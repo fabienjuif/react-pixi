@@ -149,7 +149,13 @@ declare namespace _ReactPixi {
      *
      * style={{ font: '50px Desyrel' }}
      */
-    style?: PIXI.extras.BitmapTextStyle;
+    style?: BitmapTextStyle;
+  }
+
+  interface BitmapTextStyle {
+    font: string | { name: string, size: number };
+    align: string;
+    tint: number;
   }
 
   interface INineSlicePlane extends Container<PIXI.mesh.NineSlicePlane> {
@@ -188,7 +194,15 @@ declare namespace _ReactPixi {
      *
      * properties={{ vertices: true, position: true, rotation: false }}
      */
-    properties?: PIXI.particles.ParticleContainerProperties;
+    properties?: ParticleContainerProperties;
+  }
+
+  interface ParticleContainerProperties {
+      vertices?: boolean;
+      position?: boolean;
+      rotation?: boolean;
+      uvs?: boolean;
+      tint?: boolean;
   }
 
   interface ITilingSprite
@@ -317,7 +331,7 @@ declare namespace _ReactPixi {
      *
      * options={{ antialias: true, roundPixels: true }}
      */
-    options?: PIXI.ApplicationOptions;
+    options?: ApplicationOptions;
 
     /**
      * Callback when the component is successfully mounted
@@ -332,6 +346,26 @@ declare namespace _ReactPixi {
      * @param {PIXI.Application} app
      */
     onUnmount?(app: PIXI.Application): void;
+  }
+
+  interface ApplicationOptions {
+    autoStart?: boolean;
+    width?: number;
+    height?: number;
+    view?: HTMLCanvasElement;
+    transparent?: boolean;
+    autoDensity?: boolean;
+    antialias?: boolean;
+    preserveDrawingBuffer?: boolean;
+    resolution?: number;
+    forceCanvas?: boolean;
+    backgroundColor?: number;
+    clearBeforeRender?: boolean;
+    forceFXAA?: boolean;
+    powerPreference?: string;
+    sharedTicker?: boolean;
+    sharedLoader?: boolean;
+    resizeTo?: Window | HTMLElement;
   }
 
   interface ICustomComponent<
