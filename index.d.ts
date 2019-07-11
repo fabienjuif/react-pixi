@@ -1,18 +1,19 @@
-import * as PIXI from "pixi.js";
+import { interaction, extras, Point, ObservablePoint, mesh, particles, Sprite, Graphics, BitmapText, Application, DisplayObject } from "pixi.js";
 import * as React from "react";
 
 // private
 declare namespace _ReactPixi {
+  import TextStyle = PIXI.TextStyle
   type Omit<T, K> = Pick<T, Exclude<keyof T, K>>;
 
   type InteractionEvents = {
-    [P in PIXI.interaction.InteractionEventTypes]?: (
-      event: PIXI.interaction.InteractionEvent
+    [P in interaction.InteractionEventTypes]?: (
+      event: interaction.InteractionEvent
     ) => void
   };
 
   type PointLike =
-    | PIXI.Point | PIXI.ObservablePoint
+    | Point | ObservablePoint
     | [number, number] | [number]
     | number;
 
@@ -29,8 +30,8 @@ declare namespace _ReactPixi {
        * position={100}
        * position={[100, 100]}
        * position={{x: 100, y: 100}}
-       * position={new PIXI.Point(100, 100)}
-       * position={new PIXI.ObservablePoint(100, 100)}
+       * position={new Point(100, 100)}
+       * position={new ObservablePoint(100, 100)}
        */
       position?: PointLike;
 
@@ -43,8 +44,8 @@ declare namespace _ReactPixi {
        * scale={0.5}
        * scale={[0.5, 0.5]}
        * scale={{x: 0.5, y: 0.5}}
-       * scale={new PIXI.Point(0.5, 0.5)}
-       * scale={new PIXI.ObservablePoint(0.5, 0.5)}
+       * scale={new Point(0.5, 0.5)}
+       * scale={new ObservablePoint(0.5, 0.5)}
        */
       scale?: PointLike;
 
@@ -57,14 +58,14 @@ declare namespace _ReactPixi {
        * pivot={100}
        * pivot={[100, 100]}
        * pivot={{x: 100, y: 100}}
-       * pivot={new PIXI.Point(100, 100)}
-       * pivot={new PIXI.ObservablePoint(100, 100)}
+       * pivot={new Point(100, 100)}
+       * pivot={new ObservablePoint(100, 100)}
        */
       pivot?: PointLike;
     };
 
   interface ISprite
-    extends Container<Omit<PIXI.Sprite, "anchor" | "roundPixels">> {
+    extends Container<Omit<Sprite, "anchor" | "roundPixels">> {
     /**
      * The anchor sets the origin point.
      * The default is `(0,0)`, this means the sprite's origin is the top left.
@@ -74,7 +75,7 @@ declare namespace _ReactPixi {
      *
      * anchor={0.5}
      * anchor={[0.5, 0.5]}
-     * anchor={new PIXI.ObservablePoint(0.5, 0.5)}
+     * anchor={new ObservablePoint(0.5, 0.5)}
      */
     anchor?: PointLike;
 
@@ -96,7 +97,7 @@ declare namespace _ReactPixi {
     roundPixels?: boolean;
   }
 
-  interface IText extends Container<Omit<PIXI.Text, "anchor">> {
+  interface IText extends Container<Omit<Text, "anchor">> {
     /**
      * The anchor sets the origin point of the text.
      * The default is `(0,0)`, this means the text's origin is the top left.
@@ -106,16 +107,16 @@ declare namespace _ReactPixi {
      *
      * anchor={0.5}
      * anchor={[0.5, 0.5]}
-     * anchor={new PIXI.ObservablePoint(0.5, 0.5)}
+     * anchor={new ObservablePoint(0.5, 0.5)}
      */
     anchor?: PointLike;
   }
 
-  interface IGraphics extends Container<PIXI.Graphics> {
+  interface IGraphics extends Container<Graphics> {
     /**
      * Draw a graphic with imperative callback.
      *
-     * @param {PIXI.Graphics} graphics - The graphics instance to draw on
+     * @param {Graphics} graphics - The graphics instance to draw on
      * @example
      *
      * draw={g => {
@@ -124,11 +125,11 @@ declare namespace _ReactPixi {
      *   g.endFill();
      * }}
      */
-    draw?(graphics: PIXI.Graphics): void;
+    draw?(graphics: Graphics): void;
   }
 
   interface IBitmapText
-    extends Container<Omit<PIXI.extras.BitmapText, "anchor">> {
+    extends Container<Omit<BitmapText, "anchor">> {
     /**
      * The anchor sets the origin point of the text.
      * The default is `(0,0)`, this means the text's origin is the top left.
@@ -138,7 +139,7 @@ declare namespace _ReactPixi {
      *
      * anchor={0.5}
      * anchor={[0.5, 0.5]}
-     * anchor={new PIXI.ObservablePoint(0.5, 0.5)}
+     * anchor={new ObservablePoint(0.5, 0.5)}
      */
     anchor?: PointLike;
 
@@ -149,10 +150,16 @@ declare namespace _ReactPixi {
      *
      * style={{ font: '50px Desyrel' }}
      */
-    style?: PIXI.extras.BitmapTextStyle;
+    style?: BitmapTextStyle | TextStyle;
   }
 
-  interface INineSlicePlane extends Container<PIXI.mesh.NineSlicePlane> {
+  interface BitmapTextStyle {
+    font: string | { name: string, size: number };
+    align: string;
+    tint: number;
+  }
+
+  interface INineSlicePlane extends Container<mesh.NineSlicePlane> {
     /**
      * Image to use for the nine-slice-plane.
      * The image will be automatically texturized and chached.
@@ -165,7 +172,7 @@ declare namespace _ReactPixi {
   }
 
   interface IParticleContainer
-    extends Container<PIXI.particles.ParticleContainer> {
+    extends Container<particles.ParticleContainer> {
     /**
      * Max particles size
      */
@@ -188,12 +195,20 @@ declare namespace _ReactPixi {
      *
      * properties={{ vertices: true, position: true, rotation: false }}
      */
-    properties?: PIXI.particles.ParticleContainerProperties;
+    properties?: ParticleContainerProperties;
+  }
+
+  interface ParticleContainerProperties {
+      vertices?: boolean;
+      position?: boolean;
+      rotation?: boolean;
+      uvs?: boolean;
+      tint?: boolean;
   }
 
   interface ITilingSprite
     extends Container<
-      Omit<PIXI.extras.TilingSprite, "tileScale" | "tilePosition">
+      Omit<extras.TilingSprite, "tileScale" | "tilePosition">
     > {
     /**
      * The scale factor of the tile.
@@ -204,8 +219,8 @@ declare namespace _ReactPixi {
      * scale={0.5}
      * scale={[0.5, 0.5]}
      * scale={{x: 0.5, y: 0.5}}
-     * scale={new PIXI.Point(0.5, 0.5)}
-     * scale={new PIXI.ObservablePoint(0.5, 0.5)}
+     * scale={new Point(0.5, 0.5)}
+     * scale={new ObservablePoint(0.5, 0.5)}
      */
     tileScale?: PointLike;
 
@@ -218,8 +233,8 @@ declare namespace _ReactPixi {
      * tilePosition={100}
      * tilePosition={[100, 100]}
      * tilePosition={{x: 100, y: 100}}
-     * tilePosition={new PIXI.Point(100, 100)}
-     * tilePosition={new PIXI.ObservablePoint(100, 100)}
+     * tilePosition={new Point(100, 100)}
+     * tilePosition={new ObservablePoint(100, 100)}
      */
     tilePosition: PointLike;
 
@@ -234,7 +249,7 @@ declare namespace _ReactPixi {
     image?: string;
   }
 
-  interface IRope extends Container<PIXI.mesh.Rope> {
+  interface IRope extends Container<mesh.Rope> {
     /**
      * Directly apply an image to the Rope.
      * The image will be automatically texturized and chached.
@@ -246,7 +261,7 @@ declare namespace _ReactPixi {
     image?: string;
   }
 
-  interface IMesh extends Container<PIXI.mesh.Mesh> {
+  interface IMesh extends Container<mesh.Mesh> {
     /**
      * Directly apply an image to a Mesh.
      * The image will be automatically texturized and chached.
@@ -269,7 +284,7 @@ declare namespace _ReactPixi {
 
   interface IReactFiber {
     createContainer(
-      containerInfo: PIXI.Container,
+      containerInfo: Container,
       isAsync: boolean,
       hydrate: boolean
     ): object;
@@ -296,7 +311,7 @@ declare namespace _ReactPixi {
     height?: number;
 
     /**
-     * Enable the {@see PIXI.Application} ticker? [default=true].
+     * Enable the {@see Application} ticker? [default=true].
      * Automatically renders the stage on request animation frame.
      */
     raf?: boolean;
@@ -312,31 +327,51 @@ declare namespace _ReactPixi {
     /**
      * The PIXI application options.
      *
-     * @see PIXI.ApplicationOptions
+     * @see ApplicationOptions
      * @example
      *
      * options={{ antialias: true, roundPixels: true }}
      */
-    options?: PIXI.ApplicationOptions;
+    options?: ApplicationOptions;
 
     /**
      * Callback when the component is successfully mounted
      *
-     * @param {PIXI.Application} app
+     * @param {Application} app
      */
-    onMount?(app: PIXI.Application): void;
+    onMount?(app: Application): void;
 
     /**
      * Callback when the component is successfully unmounted
      *
-     * @param {PIXI.Application} app
+     * @param {Application} app
      */
-    onUnmount?(app: PIXI.Application): void;
+    onUnmount?(app: Application): void;
+  }
+
+  interface ApplicationOptions {
+    autoStart?: boolean;
+    width?: number;
+    height?: number;
+    view?: HTMLCanvasElement;
+    transparent?: boolean;
+    autoDensity?: boolean;
+    antialias?: boolean;
+    preserveDrawingBuffer?: boolean;
+    resolution?: number;
+    forceCanvas?: boolean;
+    backgroundColor?: number;
+    clearBeforeRender?: boolean;
+    forceFXAA?: boolean;
+    powerPreference?: string;
+    sharedTicker?: boolean;
+    sharedLoader?: boolean;
+    resizeTo?: Window | HTMLElement;
   }
 
   interface ICustomComponent<
     P extends { [key: string]: any },
-    PixiInstance extends PIXI.DisplayObject
+    PixiInstance extends DisplayObject
   > {
     /**
      * Create the PIXI instance
@@ -352,18 +387,18 @@ declare namespace _ReactPixi {
      * This is called during React reconciliation.
      *
      * @param {PixiInstance} instance
-     * @param {PIXI.Container} parent
+     * @param {Container} parent
      */
-    didMount?(instance: PixiInstance, parent: PIXI.Container): void;
+    didMount?(instance: PixiInstance, parent: Container): void;
 
     /**
      * Instance will unmount
      * This is called during React reconciliation.
      *
      * @param {PixiInstance} instance
-     * @param {PIXI.Container} parent
+     * @param {Container} parent
      */
-    willUnmount?(instance: PixiInstance, parent: PIXI.Container): void;
+    willUnmount?(instance: PixiInstance, parent: Container): void;
 
     /**
      * Apply props for this custom component.
@@ -387,7 +422,7 @@ declare namespace ReactPixi {
   class Sprite extends React.Component<_ReactPixi.ISprite> {}
   class Text extends React.Component<_ReactPixi.IText> {}
   class Container extends React.Component<
-    _ReactPixi.Container<PIXI.Container>
+    _ReactPixi.Container<Container>
   > {}
   class Graphics extends React.Component<_ReactPixi.IGraphics> {}
   class BitmapText extends React.Component<_ReactPixi.IBitmapText> {}
@@ -405,14 +440,14 @@ declare namespace ReactPixi {
       | React.ReactElement<any>
       | Array<React.ReactElement<any>>
       | React.Factory<any>,
-    container: PIXI.Container,
+    container: Container,
     callback?: () => void
   ) => any;
 
   // context
-  const AppContext: React.Context<PIXI.Application>;
-  const AppProvider: React.ComponentType<React.ProviderProps<PIXI.Application>>;
-  const AppConsumer: React.ComponentType<React.ConsumerProps<PIXI.Application>>;
+  const AppContext: React.Context<Application>;
+  const AppProvider: React.ComponentType<React.ProviderProps<Application>>;
+  const AppConsumer: React.ComponentType<React.ConsumerProps<Application>>;
 
   // fiber
   const PixiFiber: _ReactPixi.IReactFiber;
@@ -427,11 +462,11 @@ declare namespace ReactPixi {
    *
    * type RectangleProps = { x: number, y: number, color: number };
    *
-   * const Rectangle = PixiComponent<RectangleProps, PIXI.Graphics>('Rectangle', {
+   * const Rectangle = PixiComponent<RectangleProps, Graphics>('Rectangle', {
    *   create() {
-   *     return new PIXI.Graphics();
+   *     return new Graphics();
    *   }
-   *   applyProps(ins: PIXI.Graphics, oldProps: RectangleProps, newProps: RectangleProps) {
+   *   applyProps(ins: Graphics, oldProps: RectangleProps, newProps: RectangleProps) {
    *     ins.clear();
    *     ins.beginFill(newProps.color);
    *     ins.drawRect(newProps.x, newProps.y, 100, 100);
@@ -439,13 +474,13 @@ declare namespace ReactPixi {
    *   }
    * });
    */
-  const PixiComponent: <P, PixiInstance extends PIXI.DisplayObject>(
+  const PixiComponent: <P, PixiInstance extends DisplayObject>(
     componentName: string,
     lifecycle: _ReactPixi.ICustomComponent<P, PixiInstance>
   ) => React.ComponentClass<P>;
 
   /**
-   * Tap into the {PIXI.Application} ticker raf.
+   * Tap into the {Application} ticker raf.
    *
    * @example
    *
@@ -459,28 +494,28 @@ declare namespace ReactPixi {
   const useTick: (tick: (delta?: number) => void) => void;
 
   /**
-   * Get the {<Stage>} {PIXI.Application} instance.
+   * Get the {<Stage>} {Application} instance.
    *
    * @example
    *
    * const MyComponent = () => {
-   *   const app = useApp(); // app = PIXI.Application
+   *   const app = useApp(); // app = Application
    *
    *   return <Sprite x={x} />
    * }
    *
    */
-  const useApp: () => PIXI.Application;
+  const useApp: () => Application;
 
   /**
-   * Higher Order Component to attach the {PIXI.Application} to `app` prop.
+   * Higher Order Component to attach the {Application} to `app` prop.
    *
    * @example
    *
-   * const MyComp: FC<{ app: PIXI.Application }> = ({ app }) => <Sprite />;
+   * const MyComp: FC<{ app: Application }> = ({ app }) => <Sprite />;
    * export default withPixiApp(MyComp);
    */
-  const withPixiApp: <P extends { app: PIXI.Application }>(
+  const withPixiApp: <P extends { app: Application }>(
     WrappedComponent: React.ComponentType<P>
   ) => React.ComponentClass<_ReactPixi.Omit<P, "app">>;
 }
