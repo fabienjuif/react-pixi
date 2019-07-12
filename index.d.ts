@@ -3,6 +3,47 @@ import * as React from "react";
 
 // private
 declare namespace _ReactPixi {
+  /***************************************************************
+   * Polyfills for interfaces removed in Pixi v5 typings
+   ***************************************************************/
+  interface BitmapTextStyle {
+    font: string | { name: string, size: number };
+    align: string;
+    tint: number;
+  }
+
+  interface ApplicationOptions {
+    autoStart?: boolean;
+    width?: number;
+    height?: number;
+    view?: HTMLCanvasElement;
+    transparent?: boolean;
+    autoDensity?: boolean;
+    antialias?: boolean;
+    preserveDrawingBuffer?: boolean;
+    resolution?: number;
+    forceCanvas?: boolean;
+    backgroundColor?: number;
+    clearBeforeRender?: boolean;
+    forceFXAA?: boolean;
+    powerPreference?: string;
+    sharedTicker?: boolean;
+    sharedLoader?: boolean;
+    resizeTo?: Window | HTMLElement;
+  }
+
+  interface ParticleContainerProperties {
+    vertices?: boolean;
+    position?: boolean;
+    rotation?: boolean;
+    uvs?: boolean;
+    tint?: boolean;
+  }
+
+  /***************************************************************
+   * End of polyfilled interfaces
+   ***************************************************************/
+
   type Omit<T, K> = Pick<T, Exclude<keyof T, K>>;
 
   type InteractionEvents = {
@@ -152,12 +193,6 @@ declare namespace _ReactPixi {
     style?: BitmapTextStyle;
   }
 
-  interface BitmapTextStyle {
-    font: string | { name: string, size: number };
-    align: string;
-    tint: number;
-  }
-
   interface INineSlicePlane extends Container<PIXI.mesh.NineSlicePlane> {
     /**
      * Image to use for the nine-slice-plane.
@@ -195,14 +230,6 @@ declare namespace _ReactPixi {
      * properties={{ vertices: true, position: true, rotation: false }}
      */
     properties?: ParticleContainerProperties;
-  }
-
-  interface ParticleContainerProperties {
-    vertices?: boolean;
-    position?: boolean;
-    rotation?: boolean;
-    uvs?: boolean;
-    tint?: boolean;
   }
 
   interface ITilingSprite
@@ -346,26 +373,6 @@ declare namespace _ReactPixi {
      * @param {PIXI.Application} app
      */
     onUnmount?(app: PIXI.Application): void;
-  }
-
-  interface ApplicationOptions {
-    autoStart?: boolean;
-    width?: number;
-    height?: number;
-    view?: HTMLCanvasElement;
-    transparent?: boolean;
-    autoDensity?: boolean;
-    antialias?: boolean;
-    preserveDrawingBuffer?: boolean;
-    resolution?: number;
-    forceCanvas?: boolean;
-    backgroundColor?: number;
-    clearBeforeRender?: boolean;
-    forceFXAA?: boolean;
-    powerPreference?: string;
-    sharedTicker?: boolean;
-    sharedLoader?: boolean;
-    resizeTo?: Window | HTMLElement;
   }
 
   interface ICustomComponent<
